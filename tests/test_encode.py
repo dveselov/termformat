@@ -94,15 +94,15 @@ class TermFormatEncoderTest(TestCase):
     with self.assertRaises(ValueError):
       bytes = termformat.encode({'dictionary': 'item'})
 
-  def test_encode_string(self):
+  def test_encode_binary(self):
     bytes = termformat.encode('foo')
     self.assertEqual(bytes, b'\x83m\x00\x00\x00\x03foo')
 
-  def test_encode_empty_string(self):
+  def test_encode_empty_binary(self):
     bytes = termformat.encode('')
     self.assertEqual(bytes, b'\x83m\x00\x00\x00\x00')
 
-  def test_encode_large_string(self):
+  def test_encode_large_binary(self):
     with self.assertRaises(ValueError):
       string = LargeStringMock()
       bytes = termformat.encode(string)
