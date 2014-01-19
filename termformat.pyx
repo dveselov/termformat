@@ -30,6 +30,7 @@ ERL_MAGIC = pack('>B', 131)
 
 
 cdef bytes encode_term(object term):
+  cdef int length
   term_type = type(term)
   if term is False:
     return encode_term(":false")
@@ -78,12 +79,12 @@ cdef bytes encode_term(object term):
   elif term_type is tuple:
     length = len(term)
     if length <= 255:
-      tuple_type, length = ERL_SMALL_TUPLE, pack('>B', length)
+      tuple_type, tuple_length = ERL_SMALL_TUPLE, pack('>B', length)
     elif length <= 4294967295:
-      tuple_type, length = ERL_LARGE_TUPLE, pack('>L', length)
+      tuple_type, tuple_length = ERL_LARGE_TUPLE, pack('>L', length)
     else:
       raise ValueError("Invalid tuple length: {0}".format(length))
-    content = tuple_type + length
+    content = tuple_type + tuple_length
     for item in term:
       content += encode_term(item)
     return content
@@ -104,3 +105,56 @@ cdef bytes encode_term(object term):
 def encode(object term):
   BODY = encode_term(term)
   return ERL_MAGIC + BODY
+
+cdef object decode_term(bytes term):
+  cdef bytes term_type, body
+  term_type = term[:1]
+  if term_type == ERL_SMALL_INT:
+    body = term[1:]
+    if not body:
+      raise ValueError("Incomplete integer data length: expected 1, got 0")
+    else:
+      return unpack('>B', body)[0]
+  elif term_type == ERL_INT:
+    body = term[1:5]
+    if len(body) < 4:
+      raise ValueError("Incomplete integer data length: expected 4, got {0}".format(len(body)))
+    else:
+      return unpack('>l', body)[0]
+  elif term_type == ERL_NEW_FLOAT:
+    body = term[1:9]
+    if len(body) < 8:
+      raise ValueError("Incomplete float length: expected 8, got {0}".format(len(body)))
+    else:
+      return unpack('>d', body)[0]
+  elif term_type == ERL_BINARY:
+    length = unpack('>L', term[1:5])[0]
+    body = term[5:]
+    if length > 4294967295:
+      raise ValueError("Invalid binary length: {0}".format(length))
+    elif length > len(body):
+      raise ValueError("Incomplete binary data length: expected {0}, got {1}".format(length, len(body)))
+    else:
+      return body.decode(DEFAULT_ENCODING)
+  elif term_type == ERL_ATOM:
+    atom_length = unpack('>H', term[1:3])[0]
+    atom_name = term[3:atom_length+3]
+    if atom_length > len(atom_name):
+      raise ValueError("Invalid atom length: expected {0}, got {1}".format(atom_length, len(atom_name)))
+    else:
+      if atom_name == b'false':
+        return False
+      elif atom_name == b'true':
+        return True
+      elif atom_name == b'nil':
+        return None
+      else:
+        atom_name = atom_name.decode(DEFAULT_ENCODING)
+        return ":" + atom_name
+  else:
+    raise ValueError("Invalid term type: {0}".format(term_type))
+
+def decode(bytes term):
+  if term[:1] != ERL_MAGIC:
+    raise ValueError("Invalid external term format version")
+  return decode_term(term[1:])
