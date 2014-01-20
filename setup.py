@@ -4,6 +4,7 @@ from Cython.Distutils import build_ext
 
 setup(
   name = 'termformat',
+  version = '0.1',
   description = 'Erlang External Term Format (de)serialization module',
   license = 'MIT',
   cmdclass = {'build_ext': build_ext},
