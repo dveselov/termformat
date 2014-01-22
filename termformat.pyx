@@ -151,6 +151,8 @@ cdef object decode_term(bytes term):
       else:
         atom_name = atom_name.decode(DEFAULT_ENCODING)
         return ":" + atom_name
+  elif term_type == ERL_NIL:
+    return []
   else:
     raise ValueError("Invalid term type: {0}".format(term_type))
 

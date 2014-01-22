@@ -68,3 +68,7 @@ class TermFormatDecoderTest(TestCase):
     with self.assertRaises(ValueError):
       result = termformat.decode(b'\x83m\x00\x00\x00\x03fo')
       self.assertEqual(result, 'foo')
+
+  def test_decode_empty_list(self):
+    result = termformat.decode(b'\x83j')
+    self.assertEqual(result, [])
