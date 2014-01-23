@@ -33,7 +33,7 @@ Erlang External Term Format (de)serialization module.
     </tr>
     <tr>
         <td>Atom</td>
-        <td>String with : prefix (as in Elixir-lang)</td>
+        <td>String with ":" prefix</td>
         <td>ATOM_EXT</td>
     </tr>
     <tr>
@@ -49,4 +49,5 @@ Erlang External Term Format (de)serialization module.
 </table>
 
 [1] Only decoding support
+
 [2] Only empty list
