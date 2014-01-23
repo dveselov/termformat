@@ -72,3 +72,24 @@ class TermFormatDecoderTest(TestCase):
   def test_decode_empty_list(self):
     result = termformat.decode(b'\x83j')
     self.assertEqual(result, [])
+
+  def test_decode_small_tuple(self):
+    result = termformat.decode(b'\x83h\x03a\x01a\x02a\x03')
+    self.assertEqual(result, (1, 2, 3))
+
+  def test_decode_complex_tuple(self):
+    result = termformat.decode(b'\x83h\na\x01b\x00\x00\x059F@\t\x1e\xb8Q\xeb'
+                                '\x85\x1fm\x00\x00\x00\x06binaryd\x00\x04atom'
+                                'd\x00\x04trued\x00\x05falsed\x00\x03nill\x00'
+                                '\x00\x00\x02a\x02l\x00\x00\x00\x01a\x02jjh'
+                                '\x03a\x01a\x02a\x03')
+    self.assertEqual(result, (1, 1337, 3.14, "binary", ":atom", True, False, None, [2, [2]], (1, 2, 3)))
+
+  def test_decode_large_tuple(self):
+    bytes = termformat.encode((1, 2, 3) * 256)
+    result = termformat.decode(bytes)
+    self.assertEqual(result, (1, 2, 3) * 256)
+
+  def test_decode_list(self):
+    result = termformat.decode(b'\x83l\x00\x00\x00\x03a\x01a\x02a\x03j')
+    self.assertEqual(result, [1, 2, 3])
