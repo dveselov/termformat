@@ -19,7 +19,7 @@ Erlang External Term Format (de)serialization module.
     <tr>
         <td>Float</td>
         <td>float</td>
-        <td>FLOAT_EXT, NEW_FLOAT_EXT[^1]</td>
+        <td>FLOAT_EXT, NEW_FLOAT_EXT</td>
     </tr>
     <tr>
         <td>Boolean</td>
@@ -29,7 +29,7 @@ Erlang External Term Format (de)serialization module.
     <tr>
         <td>String</td>
         <td>str, unicode, bytes</td>
-        <td>BINARY_EXT, STRING_EXT[^1]</td>
+        <td>BINARY_EXT, STRING_EXT*</td>
     </tr>
     <tr>
         <td>Atom</td>
@@ -44,9 +44,9 @@ Erlang External Term Format (de)serialization module.
     <tr>
         <td>List</td>
         <td>list</td>
-        <td>LIST_EXT, NIL_EXT[^2]</td>
+        <td>LIST_EXT, NIL_EXT**</td>
     </tr>
 </table>
 
-[^1] Only decoding support  
-[^2] Only empty list  
+[1] Only decoding support  
+[2] Only empty list  
