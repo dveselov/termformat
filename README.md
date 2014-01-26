@@ -1,4 +1,4 @@
-# termformat
+# termformat [![Build Status](https://travis-ci.org/dieselpoweredkitten/termformat.png?branch=master)](https://travis-ci.org/dieselpoweredkitten/termformat)
 
 Erlang External Term Format (de)serialization module.
 
