@@ -1,3 +1,4 @@
+# coding: utf-8
 import termformat
 from unittest import TestCase
 
@@ -29,7 +30,7 @@ class TermFormatEncoderTest(TestCase):
 
   def test_encode_none(self):
     bytes = termformat.encode(None)
-    self.assertEqual(bytes, b'\x83d\x00\x03nil')
+    self.assertEqual(bytes, b'\x83d\x00\tundefined')
 
   def test_encode_small_int(self):
     bytes = termformat.encode(20)
@@ -47,9 +48,9 @@ class TermFormatEncoderTest(TestCase):
     bytes = termformat.encode(-4294967296)
     self.assertEqual(bytes, b'\x83n\x05\x01\x00\x00\x00\x00\x01')
 
-  def test_encode_new_float(self):
+  def test_encode_float(self):
     bytes = termformat.encode(3.14)
-    self.assertEqual(bytes, b'\x83F@\t\x1e\xb8Q\xeb\x85\x1f')
+    self.assertEqual(bytes, b'\x83c3.14000000000000012434e+00\x00\x00\x00\x00\x00')
 
   def test_encode_list(self):
     bytes = termformat.encode([1, 2, 3])
@@ -71,6 +72,15 @@ class TermFormatEncoderTest(TestCase):
   def test_encode_large_tuple(self):
     bytes = termformat.encode((1, 2, 3) * 256)
     self.assertEqual(bytes[:5], b'\x83i\x00\x00\x03')
+
+  def test_encode_complex_tuple(self):
+    bytes = termformat.encode((1, 1337, 3.14, "binary", ":atom", True, False, None,
+                               [2, [2]], (1, 2, 3)))
+    self.assertEqual(bytes, b'\x83h\na\x01b\x00\x00\x059c3.14000000000000012434e+00'
+                            b'\x00\x00\x00\x00\x00m\x00\x00\x00\x06binaryd\x00\x04'
+                            b'atomd\x00\x04trued\x00\x05falsed\x00\tundefinedl\x00'
+                            b'\x00\x00\x02a\x02l\x00\x00\x00\x01a\x02jjh\x03a\x01a'
+                            b'\x02a\x03')
 
   def test_encode_very_large_tuple(self):
     with self.assertRaises(ValueError):
@@ -97,6 +107,10 @@ class TermFormatEncoderTest(TestCase):
   def test_encode_binary(self):
     bytes = termformat.encode('foo')
     self.assertEqual(bytes, b'\x83m\x00\x00\x00\x03foo')
+
+  def test_encode_unicode_binary(self):
+    bytes = termformat.encode(u'тест')
+    self.assertEqual(bytes, b'\x83m\x00\x00\x00\x08\xd1\x82\xd0\xb5\xd1\x81\xd1\x82')
 
   def test_encode_empty_binary(self):
     bytes = termformat.encode('')

@@ -1,3 +1,4 @@
+# coding: utf-8
 import termformat
 from unittest import TestCase
 
@@ -22,7 +23,7 @@ class TermFormatDecoderTest(TestCase):
     self.assertEqual(result, True)
 
   def test_decode_none(self):
-    result = termformat.decode(b'\x83d\x00\x03nil')
+    result = termformat.decode(b'\x83d\x00\tundefined')
     self.assertEqual(result, None)
 
   def test_decode_small_int(self):
@@ -55,6 +56,10 @@ class TermFormatDecoderTest(TestCase):
     result = termformat.decode(b'\x83F@\t\x1e\xb8Q\xeb\x85\x1f')
     self.assertEqual(result, 3.14)
 
+  def test_decode_float(self):
+    result = termformat.decode(b'\x83c3.14000000000000012434e+00\x00\x00\x00\x00\x00')
+    self.assertEqual(result, 3.14)
+
   def test_decode_incomplete_float(self):
     with self.assertRaises(ValueError):
       result = termformat.decode(b'\x83F@\t\x1e\xb8Q\xeb\x85')
@@ -63,6 +68,10 @@ class TermFormatDecoderTest(TestCase):
   def test_decode_binary(self):
     result = termformat.decode(b'\x83m\x00\x00\x00\x03foo')
     self.assertEqual(result, 'foo')
+
+  def test_decode_unicode_binary(self):
+    bytes = termformat.decode(b'\x83m\x00\x00\x00\x08\xd1\x82\xd0\xb5\xd1\x81\xd1\x82')
+    self.assertEqual(bytes, u'тест')
 
   def test_decode_incomplete_binary(self):
     with self.assertRaises(ValueError):
@@ -87,11 +96,11 @@ class TermFormatDecoderTest(TestCase):
     self.assertEqual(result, (1, 2, 3))
 
   def test_decode_complex_tuple(self):
-    result = termformat.decode(b'\x83h\na\x01b\x00\x00\x059F@\t\x1e\xb8Q\xeb'
-                               b'\x85\x1fm\x00\x00\x00\x06binaryd\x00\x04atom'
-                               b'd\x00\x04trued\x00\x05falsed\x00\x03nill\x00'
-                               b'\x00\x00\x02a\x02l\x00\x00\x00\x01a\x02jjh'
-                               b'\x03a\x01a\x02a\x03')
+    result = termformat.decode(b'\x83h\na\x01b\x00\x00\x059c3.14000000000000012434e+00'
+                               b'\x00\x00\x00\x00\x00m\x00\x00\x00\x06binaryd\x00\x04'
+                               b'atomd\x00\x04trued\x00\x05falsed\x00\tundefinedl\x00'
+                               b'\x00\x00\x02a\x02l\x00\x00\x00\x01a\x02jjh\x03a\x01a'
+                               b'\x02a\x03')
     self.assertEqual(result, (1, 1337, 3.14, "binary", ":atom", True, False, None, [2, [2]], (1, 2, 3)))
 
   def test_decode_large_tuple(self):
