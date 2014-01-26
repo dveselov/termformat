@@ -2,6 +2,26 @@
 
 Erlang External Term Format (de)serialization module.
 
+# Installation
+
+`termformat` can be installed as any other python module, e.g. with `pip`:
+```bash
+$ pip install termformat
+```
+But make sure that you have `python-dev` package is installed.
+
+# Usage
+
+```python
+import termformat
+
+binary = termformat.encode(20) # => b'\x83a\x14'
+print termformat.decode(binary) # => 20
+```
+
+# Perfomance
+
+Because `termformat` written using [cython](http://cython.org/), it's faster up to 3-6x times (or 300-600 percents, if you like *bigger* numbers) than same libraries written in pure python.
 
 # Datatypes representation
 
@@ -24,7 +44,7 @@ Erlang External Term Format (de)serialization module.
     <tr>
         <td>Boolean</td>
         <td>True, False, None</td>
-        <td>ATOM_EXT with proper name (e.g. true, false and nil)</td>
+        <td>ATOM_EXT with proper name (e.g. true, false and undefined)</td>
     </tr>
     <tr>
         <td>String</td>
