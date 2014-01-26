@@ -19,7 +19,7 @@ Erlang External Term Format (de)serialization module.
     <tr>
         <td>Float</td>
         <td>float</td>
-        <td>FLOAT_EXT, NEW_FLOAT_EXT</td>
+        <td>FLOAT_EXT, NEW_FLOAT_EXT*</td>
     </tr>
     <tr>
         <td>Boolean</td>
