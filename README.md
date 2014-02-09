@@ -8,7 +8,7 @@ Erlang External Term Format (de)serialization module.
 ```bash
 $ pip install termformat
 ```
-But make sure that you have `python-dev` package is installed.
+But make sure that you have `python-devel` package installed.
 
 # Usage
 
