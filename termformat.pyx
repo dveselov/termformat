@@ -1,6 +1,6 @@
 from struct import pack, unpack
 
-__version__ = "0.1"
+__version__ = "0.1.1"
 
 try:
   # Python 2.7
@@ -62,7 +62,8 @@ cdef bytes encode_term(object term):
   elif term_type is float:
     body = "{0:.20e}".format(term)
     body = body.encode(DEFAULT_ENCODING)
-    return ERL_FLOAT + body + b"\x00" * (31 - len(body))
+    body = body + b"\x00" * (31 - len(body))
+    return ERL_FLOAT + body
   elif term_type is bytes:
     if term.startswith(b":"):
       atom_name = term[1:]
@@ -220,9 +221,12 @@ cdef tuple decode_iterable(int length, bytes source):
   cdef list objects
   objects = []
   while length > 0:
-    term, source = decode_term(source)
-    objects.append(term)
-    length -= 1
+    if source:
+      term, source = decode_term(source)
+      objects.append(term)
+      length -= 1
+    else:
+      raise ValueError("Incomplete iterable length")
   if source[:1] == ERL_NIL:
     source = source[1:]
   return objects, source

@@ -108,9 +108,19 @@ class TermFormatDecoderTest(TestCase):
     result = termformat.decode(bytes)
     self.assertEqual(result, (1, 2, 3) * 256)
 
+  def test_decode_incomplete_tuple(self):
+    with self.assertRaises(ValueError):
+      result = termformat.decode(b'\x83h\x03a\x01a\x02')
+      self.assertEqual(result, (1, 2, 3))
+
   def test_decode_list(self):
     result = termformat.decode(b'\x83l\x00\x00\x00\x03a\x01a\x02a\x03j')
     self.assertEqual(result, [1, 2, 3])
+
+  def test_decode_incomplete_list(self):
+    with self.assertRaises(ValueError):
+      result = termformat.decode(b'\x83l\x00\x00\x00\x03a\x01j')
+      self.assertEqual(result, [1, 2, 3])
 
   def test_decode_unknown_type(self):
     with self.assertRaises(ValueError):
