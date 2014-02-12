@@ -21,7 +21,7 @@ print termformat.decode(binary) # => 20
 
 # Perfomance
 
-Because `termformat` written using [cython](http://cython.org/), it's faster up to 3-6x times (or 300-600 percents, if you like *bigger* numbers) than same libraries written in pure python.
+Because `termformat` written using [cython](http://cython.org/), it's faster up to 3-6x times than same libraries written in pure python.
 
 # Datatypes representation
 
@@ -70,3 +70,4 @@ Because `termformat` written using [cython](http://cython.org/), it's faster up 
 
 [1] Only decoding support  
 [2] Only empty list  
+[3] If you need to encode/decode more complex types (such as datetime objects and dictionaries), see [beretta](https://github.com/dieselpoweredkitten/beretta)  
