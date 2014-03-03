@@ -52,6 +52,10 @@ class TermFormatEncoderTest(TestCase):
     bytes = termformat.encode(3.14)
     self.assertEqual(bytes, b'\x83c3.14000000000000012434e+00\x00\x00\x00\x00\x00')
 
+  def test_encode_zero_float(self):
+    bytes = termformat.encode(0.0)
+    self.assertEqual(bytes, b'\x83c0.00000000000000000000e+00\x00\x00\x00\x00\x00')
+
   def test_encode_list(self):
     bytes = termformat.encode([1, 2, 3])
     self.assertEqual(bytes, b'\x83l\x00\x00\x00\x03a\x01a\x02a\x03j')

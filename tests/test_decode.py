@@ -60,6 +60,10 @@ class TermFormatDecoderTest(TestCase):
     result = termformat.decode(b'\x83c3.14000000000000012434e+00\x00\x00\x00\x00\x00')
     self.assertEqual(result, 3.14)
 
+  def test_encode_zero_float(self):
+    bytes = termformat.decode(b'\x83c0.00000000000000000000e+00\x00\x00\x00\x00\x00')
+    self.assertEqual(bytes, 0.0)
+
   def test_decode_incomplete_float(self):
     with self.assertRaises(ValueError):
       result = termformat.decode(b'\x83F@\t\x1e\xb8Q\xeb\x85')
