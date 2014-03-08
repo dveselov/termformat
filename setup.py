@@ -7,7 +7,7 @@ setup(
   url = 'https://github.com/dieselpoweredkitten/termformat',
   author = 'termformat contributors',
   author_email = 'github@require.pm',
-  version = '0.1.1',
+  version = '0.1.2',
   description = 'Erlang External Term Format (de)serialization module',
   license = 'MIT',
   ext_modules = [
