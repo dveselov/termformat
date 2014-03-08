@@ -1,7 +1,7 @@
 # coding: utf-8
 import struct
 
-__version__ = "0.1.1"
+__version__ = "0.1.2"
 
 try:
   # Python 2.7
@@ -35,13 +35,7 @@ ERL_MAGIC = b'\x83'
 cdef bytes encode_term(object term):
   cdef int length
   term_type = type(term)
-  if term is False:
-    return encode_term(":false")
-  elif term is True:
-    return encode_term(":true")
-  elif term is None:
-    return encode_term(":undefined")
-  elif term_type in (int, long):
+  if term_type in (int, long):
     if 0 <= term <= 255:
       return ERL_SMALL_INT + struct.pack('B', term)
     elif -2147483648 <= term <= 2147483647:
@@ -203,15 +197,8 @@ cdef object decode_term(bytes term):
     if atom_length > len(atom_name) + 3:
       raise ValueError("Invalid ATOM_EXT length: expected {0}, got {1}".format(atom_length, len(atom_name)))
     else:
-      if atom_name == b'false':
-        return False, term[atom_length:]
-      elif atom_name == b'true':
-        return True, term[atom_length:]
-      elif atom_name == b'undefined':
-        return None, term[atom_length:]
-      else:
-        atom_name = atom_name.decode(DEFAULT_ENCODING)
-        return ":" + atom_name, term[atom_length:]
+      atom_name = atom_name.decode(DEFAULT_ENCODING)
+      return ":" + atom_name, term[atom_length:]
   elif term_type == ERL_NIL:
     return [], term[1:]
   else:

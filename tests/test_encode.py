@@ -21,16 +21,19 @@ class LargeStringMock(LargeMock, str):
 class TermFormatEncoderTest(TestCase):
 
   def test_encode_false(self):
-    bytes = termformat.encode(False)
-    self.assertEqual(bytes, b'\x83d\x00\x05false')
+    with self.assertRaises(ValueError):
+      bytes = termformat.encode(False)
+      self.assertEqual(bytes, b'\x83d\x00\x05false')
 
   def test_encode_true(self):
-    bytes = termformat.encode(True)
-    self.assertEqual(bytes, b'\x83d\x00\x04true')
+    with self.assertRaises(ValueError):
+      bytes = termformat.encode(True)
+      self.assertEqual(bytes, b'\x83d\x00\x04true')
 
   def test_encode_none(self):
-    bytes = termformat.encode(None)
-    self.assertEqual(bytes, b'\x83d\x00\tundefined')
+    with self.assertRaises(ValueError):
+      bytes = termformat.encode(None)
+      self.assertEqual(bytes, b'\x83d\x00\tundefined')
 
   def test_encode_small_int(self):
     bytes = termformat.encode(20)
@@ -78,7 +81,7 @@ class TermFormatEncoderTest(TestCase):
     self.assertEqual(bytes[:5], b'\x83i\x00\x00\x03')
 
   def test_encode_complex_tuple(self):
-    bytes = termformat.encode((1, 1337, 3.14, "binary", ":atom", True, False, None,
+    bytes = termformat.encode((1, 1337, 3.14, "binary", ":atom", ":true", ":false", ":undefined",
                                [2, [2]], (1, 2, 3)))
     self.assertEqual(bytes, b'\x83h\na\x01b\x00\x00\x059c3.14000000000000012434e+00'
                             b'\x00\x00\x00\x00\x00m\x00\x00\x00\x06binaryd\x00\x04'

@@ -44,7 +44,7 @@ Because `termformat` written using [cython](http://cython.org/), it's faster up 
     <tr>
         <td>Boolean</td>
         <td>True, False, None</td>
-        <td>ATOM_EXT with proper name (e.g. true, false and undefined)</td>
+        <td>Not supported***</td>
     </tr>
     <tr>
         <td>String</td>
@@ -70,4 +70,4 @@ Because `termformat` written using [cython](http://cython.org/), it's faster up 
 
 [1] Only decoding support  
 [2] Only empty list  
-[3] If you need to encode/decode more complex types (such as datetime objects and dictionaries), see [beretta](https://github.com/dieselpoweredkitten/beretta)  
+[3] If you need to encode/decode more complex types (such as booleans, datetime objects and dictionaries), see [beretta](https://github.com/dieselpoweredkitten/beretta)  
