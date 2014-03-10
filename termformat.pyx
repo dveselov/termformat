@@ -53,7 +53,7 @@ _signed_int4_unpack = _signed_int4.unpack
 _float_unpack = _float.unpack
 
 
-cdef bytes encode_term(object term):
+cdef inline bytes encode_term(object term):
   cdef int length = 0
   term_type = type(term)
   if term_type in (int, long):
@@ -82,12 +82,12 @@ cdef bytes encode_term(object term):
     return ERL_FLOAT + body
   elif term_type is bytes:
     if term.startswith(b":"):
-      atom_name = term[1:]
-      length = len(atom_name)
+      name = term[1:]
+      length = len(name)
       if not length or length > 255:
         raise ValueError("Invalid ATOM_EXT length: {0}".format(term))
       else:
-        return ERL_ATOM + _int2_pack(length) + atom_name
+        return ERL_ATOM + _int2_pack(length) + name
     else:
       length = len(term)
       if length <= 4294967295:
@@ -129,8 +129,7 @@ cpdef encode(object term):
   return ERL_MAGIC + BODY
 
 
-cdef object decode_term(bytes term):
-  cdef bytes term_type, body
+cdef inline object decode_term(bytes term):
   term_type = term[:1]
   if term_type == ERL_SMALL_INT:
     body = term[1:2]
@@ -226,14 +225,13 @@ cdef object decode_term(bytes term):
     raise ValueError("Invalid term type: {0}".format(term_type))
 
 
-cdef tuple decode_iterable(int length, bytes source):
-  cdef list objects = []
+cdef inline tuple decode_iterable(int length, bytes source):
+  cdef list objects = [0] * length
   for i in xrange(length):
     term, source = decode_term(source)
-    objects.append(term)
-  else:
-    if source[:1] == ERL_NIL:
-      source = source[1:]
+    objects[i] = term
+  if source[:1] == ERL_NIL:
+    source = source[1:]
   return objects, source
 
 
