@@ -42,11 +42,6 @@ Because `termformat` written using [cython](http://cython.org/), it's faster up 
         <td>FLOAT_EXT, NEW_FLOAT_EXT*</td>
     </tr>
     <tr>
-        <td>Boolean</td>
-        <td>True, False, None</td>
-        <td>Not supported***</td>
-    </tr>
-    <tr>
         <td>String</td>
         <td>str, unicode, bytes</td>
         <td>BINARY_EXT, STRING_EXT*</td>
