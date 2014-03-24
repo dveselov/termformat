@@ -97,7 +97,7 @@ cdef inline bytes encode_term(object term):
   elif term_type in (str, unicode):
     new_term = term.encode(DEFAULT_ENCODING)
     return encode_term(new_term)
-  elif term_type is tuple:
+  elif term_type in (tuple, set):
     length = len(term)
     if length <= 255:
       tuple_type, tuple_length = ERL_SMALL_TUPLE, _char_pack(length)

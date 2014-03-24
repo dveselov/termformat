@@ -80,6 +80,14 @@ class TermFormatEncoderTest(TestCase):
     bytes = termformat.encode((1, 2, 3) * 256)
     self.assertEqual(bytes[:5], b'\x83i\x00\x00\x03')
 
+  def test_encode_small_set(self):
+    bytes = termformat.encode({1, 2, 3})
+    self.assertEqual(bytes, b'\x83h\x03a\x01a\x02a\x03')
+
+  def test_encode_large_set(self):
+    bytes = termformat.encode(set(range(1024)))
+    self.assertEqual(bytes[:5], b'\x83i\x00\x00\x04')
+
   def test_encode_complex_tuple(self):
     bytes = termformat.encode((1, 1337, 3.14, "binary", ":atom", ":true", ":false", ":undefined",
                                [2, [2]], (1, 2, 3)))
