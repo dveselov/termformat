@@ -70,6 +70,11 @@ class TermFormatDecoderTest(TestCase):
       result = termformat.decode(b"\x83m\x00\x00\x00\x03fo")
       self.assertEqual(result, "foo")
 
+  def test_decode_binary_with_negative_length(self):
+    with self.assertRaises(ValueError):
+      result = termformat.decode(b"\x83m\xff\xff\xff\xfdfoo")
+      self.assertEqual(result, "foo")
+
   def test_decode_string(self):
     result = termformat.decode(b"\x83k\x00\x03foo")
     self.assertEqual(result, "foo")
