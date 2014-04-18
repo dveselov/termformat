@@ -107,13 +107,17 @@ class TermFormatEncoderTest(TestCase):
     self.assertEqual(bytes, b'\x83d\x00\x03foo')
 
   def test_encode_atom_without_name(self):
-    with self.assertRaises(ValueError):
-      bytes = termformat.encode(":")
+    bytes = termformat.encode(":")
+    self.assertEqual(bytes, b'\x83m\x00\x00\x00\x01:')
 
   def test_encode_large_atom(self):
     with self.assertRaises(ValueError):
       atom = LargeAtomMock()
       bytes = termformat.encode(atom)
+
+  def test_encode_atom_with_upper_chars(self):
+    bytes = termformat.encode(":Foo")
+    self.assertEqual(bytes, b'\x83m\x00\x00\x00\x04:Foo')
 
   def test_encode_not_supported_data_type(self):
     with self.assertRaises(ValueError):
