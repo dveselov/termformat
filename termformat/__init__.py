@@ -9,6 +9,8 @@ try:
   long = long
 except NameError:
   # Python 3.3
+  unicode = str
+  xrange = range
   long = int
 
 DEFAULT_ENCODING = "utf-8"
