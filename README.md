@@ -1,6 +1,6 @@
 # termformat [![Build Status](https://travis-ci.org/tyrannosaurus/termformat.svg?branch=master)](https://travis-ci.org/tyrannosaurus/termformat)
 
-Erlang External Term Format (de)serialization module.
+[Erlang External Term Format](http://erlang.org/doc/apps/erts/erl_ext_dist.html) (de)serialization module.
 
 # Installation
 
