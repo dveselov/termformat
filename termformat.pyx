@@ -4,7 +4,7 @@
 from struct import Struct
 
 __version__ = "0.1.5"
-__is_cython__ = False
+__is_cython__ = True
 
 try:
   # Python 2.7
