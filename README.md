@@ -19,10 +19,6 @@ binary = termformat.encode(20) # => b'\x83a\x14'
 print termformat.decode(binary) # => 20
 ```
 
-# Perfomance
-
-Because `termformat` written using [cython](http://cython.org/), it's faster up to 3-6x times than same libraries written in pure python.
-
 # Datatypes representation
 
 <table>
@@ -59,10 +55,9 @@ Because `termformat` written using [cython](http://cython.org/), it's faster up 
     <tr>
         <td>List</td>
         <td>list</td>
-        <td>LIST_EXT, NIL_EXT**</td>
+        <td>LIST_EXT, NIL_EXT</td>
     </tr>
 </table>
 
 [1] Only decoding support  
-[2] Only empty list  
-[3] If you need to encode/decode more complex types (such as booleans, datetime objects and dictionaries), see [beretta](https://github.com/tyrannosaurus/beretta)  
+[2] If you need to encode/decode more complex types (such as booleans, datetime objects and dictionaries), see [beretta](https://github.com/tyrannosaurus/beretta)  

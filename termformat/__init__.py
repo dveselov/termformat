@@ -1,6 +1,4 @@
 # coding: utf-8
-# cython: boundscheck=False
-# cython: wraparound=False
 from struct import Struct
 
 __version__ = "0.1.5"
@@ -12,9 +10,6 @@ try:
 except NameError:
   # Python 3.3
   long = int
-
-cdef str DEFAULT_ENCODING
-cdef bytes ERL_NEW_FLOAT, ERL_COMPRESSED, ERL_SMALL_INT, ERL_INT, ERL_FLOAT, ERL_ATOM, ERL_SMALL_TUPLE, ERL_LARGE_TUPLE, ERL_NIL, ERL_STRING, ERL_BINARY, ERL_SMALL_BIGNUM, ERL_LARGE_BIGNUM, ERL_MAGIC
 
 DEFAULT_ENCODING = "utf-8"
 
@@ -54,8 +49,7 @@ _signed_int4_unpack = _signed_int4.unpack
 _float_unpack = _float.unpack
 
 
-cdef inline bytes encode_term(object term):
-  cdef int length = 0
+def encode_term(term):
   term_type = type(term)
   if term_type in (int, long):
     if 0 <= term <= 255:
@@ -125,12 +119,12 @@ cdef inline bytes encode_term(object term):
     raise ValueError("Unknown datatype: {0}".format(term_type))
 
 
-cpdef encode(object term):
+def encode(term):
   BODY = encode_term(term)
   return ERL_MAGIC + BODY
 
 
-cdef inline object decode_term(bytes term):
+def decode_term(term):
   term_type = term[:1]
   if term_type == ERL_SMALL_INT:
     body = term[1:2]
@@ -226,8 +220,8 @@ cdef inline object decode_term(bytes term):
     raise ValueError("Invalid term type: {0}".format(term_type))
 
 
-cdef inline tuple decode_iterable(int length, bytes source):
-  cdef list objects = [0] * length
+def decode_iterable(length, source):
+  objects = [0] * length
   for i in xrange(length):
     term, source = decode_term(source)
     objects[i] = term
@@ -236,7 +230,7 @@ cdef inline tuple decode_iterable(int length, bytes source):
   return objects, source
 
 
-cpdef decode(bytes term):
+def decode(term):
   if term[:1] != ERL_MAGIC:
     raise ValueError("Invalid external term format version")
   return decode_term(term[1:])[0]
