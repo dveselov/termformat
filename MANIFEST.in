@@ -1,4 +1,3 @@
-setup.py
-LICENSE
-termformat.c
-termformat/__init__.py
+include setup.py
+include termformat.c
+include termformat/__init__.py
