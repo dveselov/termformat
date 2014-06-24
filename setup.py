@@ -1,5 +1,4 @@
-import sys; PYPY = hasattr(sys, 'pypy_version_info')
-
+import sys
 from distutils.core import setup
 from distutils.extension import Extension
 
@@ -18,7 +17,7 @@ base = {
   )
 }
 
-if PYPY:
+if hasattr(sys, 'pypy_version_info'):
   modules = {
     'packages': ['termformat'],
   }
