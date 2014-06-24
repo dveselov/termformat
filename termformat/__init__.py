@@ -7,7 +7,7 @@ __is_cython__ = False
 try:
   # Python 2.7
   long = long
-except NameError:
+except NameError: # pragma: no cover
   # Python 3.3
   unicode = str
   xrange = range
