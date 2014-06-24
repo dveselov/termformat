@@ -43,11 +43,15 @@ class TermFormatEncoderTest(TestCase):
     bytes = termformat.encode(300)
     self.assertEqual(bytes, b'\x83b\x00\x00\x01,')
 
-  def test_encode_large_int(self):
-    bytes = termformat.encode(4294967296)
-    self.assertEqual(bytes, b'\x83n\x05\x00\x00\x00\x00\x00\x01')
+  def test_encode_big_int(self):
+    bytes = termformat.encode(4294967295)
+    self.assertEqual(bytes, b'\x83n\x04\x00\xff\xff\xff\xff')
 
-  def test_encode_large_negative_int(self):
+  def test_encode_large_int(self):
+    bytes = termformat.encode(4294967295 ** 1000)
+    self.assertEqual(bytes[:2], b'\x83o')
+
+  def test_encode_big_negative_int(self):
     bytes = termformat.encode(-4294967296)
     self.assertEqual(bytes, b'\x83n\x05\x01\x00\x00\x00\x00\x01')
 
