@@ -1,4 +1,4 @@
-import sys
+import platform
 from distutils.core import setup
 from distutils.extension import Extension
 
@@ -17,16 +17,18 @@ base = {
   )
 }
 
-if hasattr(sys, 'pypy_version_info'):
-  modules = {
-    'packages': ['termformat'],
-  }
-else:
-  modules = {
+implementation = platform.python_implementation()
+
+if implementation == "CPython":
+  packages = {
     'ext_modules': [
       Extension('termformat', ['termformat.c'])
     ],
   }
-base.update(modules)
+else:
+  packages = {
+    'packages': ['termformat'],
+  }
 
+base.update(packages)
 setup(**base)
