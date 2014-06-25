@@ -54,6 +54,10 @@ _signed_int4_unpack = _signed_int4.unpack
 _float_unpack = _float.unpack
 
 
+cpdef is_atom(bytes term):
+  return term.startswith(":")
+
+
 cdef inline bytes encode_term(object term):
   cdef int length = 0
   term_type = type(term)
@@ -82,7 +86,7 @@ cdef inline bytes encode_term(object term):
     body = body + b"\x00" * (31 - len(body))
     return ERL_FLOAT + body
   elif term_type is bytes:
-    if term.startswith(b":") and term[1:2].islower():
+    if term.startswith(b":"):
       name = term[1:]
       length = len(name)
       if not length or length > 255:

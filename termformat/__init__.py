@@ -51,6 +51,10 @@ _signed_int4_unpack = _signed_int4.unpack
 _float_unpack = _float.unpack
 
 
+def is_atom(term):
+  return term.startswith(":")
+
+
 def encode_term(term):
   term_type = type(term)
   if term_type in (int, long):
@@ -70,7 +74,7 @@ def encode_term(term):
         return ERL_SMALL_BIGNUM + _char_pack(length) + sign + body
       elif length <= 4294967295:
         return ERL_LARGE_BIGNUM + _int4_pack(length) + sign + body
-      else:
+      else: # pragma: no cover
         raise ValueError("Invalid BIGNUM_EXT length: {0}".format(length))
   elif term_type is float:
     body = "{0:.20e}".format(term)
@@ -78,7 +82,7 @@ def encode_term(term):
     body = body + b"\x00" * (31 - len(body))
     return ERL_FLOAT + body
   elif term_type is bytes:
-    if term.startswith(b":") and term[1:2].islower():
+    if term.startswith(b":"):
       name = term[1:]
       length = len(name)
       if not length or length > 255:
@@ -89,7 +93,7 @@ def encode_term(term):
       length = len(term)
       if length <= 4294967295:
         return ERL_BINARY + _int4_pack(length) + term
-      else:
+      else: # pragma: no cover
         raise ValueError("Invalid BINARY_EXT length: {0}".format(length))
   elif term_type in (str, unicode):
     new_term = term.encode(DEFAULT_ENCODING)
@@ -100,7 +104,7 @@ def encode_term(term):
       tuple_type, tuple_length = ERL_SMALL_TUPLE, _char_pack(length)
     elif length <= 4294967295:
       tuple_type, tuple_length = ERL_LARGE_TUPLE, _int4_pack(length)
-    else:
+    else:  # pragma: no cover
       raise ValueError("Invalid TUPLE_EXT length: {0}".format(length))
     content = tuple_type + tuple_length
     for item in term:
@@ -115,7 +119,7 @@ def encode_term(term):
       for item in term:
         body += encode_term(item)
       return ERL_LIST + body + ERL_NIL
-    else:
+    else: # pragma: no cover
       raise ValueError("Invalid LIST_EXT length: {0}".format(length))
   else:
     raise ValueError("Unknown datatype: {0}".format(term_type))
@@ -236,3 +240,4 @@ def decode(term):
   if term[:1] != ERL_MAGIC:
     raise ValueError("Invalid external term format version")
   return decode_term(term[1:])[0]
+
