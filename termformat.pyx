@@ -3,7 +3,7 @@
 # cython: wraparound=False
 from struct import Struct
 
-__version__ = "0.1.5"
+__version__ = "0.1.6"
 __is_cython__ = True
 
 try:
