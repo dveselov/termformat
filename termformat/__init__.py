@@ -85,8 +85,10 @@ def encode_term(term):
     if term.startswith(b":"):
       name = term[1:]
       length = len(name)
-      if not length or length > 255:
-        raise ValueError("Invalid ATOM_EXT length: {0}".format(term))
+      if not length:
+        raise ValueError("Invalid ATOM_EXT length: 0")
+      elif length > 255:
+        raise ValueError("Invalid ATOM_EXT length: {0}".format(length))
       else:
         return ERL_ATOM + _int2_pack(length) + name
     else:
