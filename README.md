@@ -18,6 +18,9 @@ import termformat
 
 binary = termformat.encode(20) # => b'\x83a\x14'
 print termformat.decode(binary) # => 20
+print termformat.is_atom(":foo") # => True
+print termformat.atom_to_binary(":foo") # => "foo"
+print termformat.binary_to_atom("foo") # => ":foo"
 ```
 
 # Datatypes representation
