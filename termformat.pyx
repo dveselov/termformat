@@ -54,8 +54,20 @@ _signed_int4_unpack = _signed_int4.unpack
 _float_unpack = _float.unpack
 
 
-cpdef is_atom(bytes term):
+cpdef is_atom(str term):
   return term.startswith(":")
+
+cpdef str binary_to_atom(str term):
+  if not is_atom(term):
+    return ":{0}".format(term)
+  else:
+    raise ValueError("Invalid value: {0}".format(term))
+
+cpdef str atom_to_binary(str term):
+  if is_atom(term):
+    return term[1:]
+  else:
+    raise ValueError("Invalid value: {0}".format(term))
 
 
 cdef inline bytes encode_term(object term):

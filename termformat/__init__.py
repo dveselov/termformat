@@ -52,7 +52,20 @@ _float_unpack = _float.unpack
 
 
 def is_atom(term):
-  return term.startswith(":")
+  if isinstance(term, (str, bytes)):
+    return term.startswith(":")
+
+def binary_to_atom(term):
+  if isinstance(term, (str, bytes)):
+    if not is_atom(term):
+      return ":{0}".format(term)
+  raise ValueError("Invalid value: {0}".format(term))
+
+def atom_to_binary(term):
+  if is_atom(term):
+    return term[1:]
+  else:
+    raise ValueError("Invalid value: {0}".format(term))
 
 
 def encode_term(term):
