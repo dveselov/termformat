@@ -6,6 +6,7 @@ class UtilsTestCase(TestCase):
 
   def test_is_valid_atom(self):
     self.assertTrue(termformat.is_atom(":foo"))
+    self.assertTrue(termformat.is_atom(u":foo"))
     self.assertTrue(termformat.is_atom(":Bar"))
 
   def test_is_invalid_atom(self):
