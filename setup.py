@@ -7,7 +7,7 @@ base = {
   'url': 'https://github.com/tyrannosaurus/termformat',
   'author': 'termformat contributors',
   'author_email': 'github@require.pm',
-  'version': '0.1.5',
+  'version': '0.1.7',
   'description': 'Erlang External Term Format (de)serialization module',
   'license': 'MIT',
   'classifiers': (
