@@ -2,6 +2,7 @@
 # cython: boundscheck=False
 # cython: wraparound=False
 from struct import Struct
+from zlib import compress, decompress
 
 __version__ = "0.1.7"
 __is_cython__ = True
@@ -143,9 +144,17 @@ cdef inline bytes encode_term(object term):
     raise ValueError("Unknown datatype: {0}".format(term_type))
 
 
-cpdef encode(object term):
-  BODY = encode_term(term)
-  return ERL_MAGIC + BODY
+cpdef encode(object term, int compressed=0):
+  body = encode_term(term)
+  if compressed:
+    if 0 > compressed or compressed > 9:
+      raise ValueError("Invalid compression level: {0}".format(compressed))
+    else:
+      compressed_body = compress(body, compressed)
+      compressed_length = len(compressed_body)
+      if compressed_length + 5 <= len(body):
+        return ERL_MAGIC + ERL_COMPRESSED + _int4_pack(compressed_length) + compressed_body
+  return ERL_MAGIC + body
 
 
 cdef inline object decode_term(bytes term):
@@ -257,4 +266,14 @@ cdef inline tuple decode_iterable(int length, bytes source):
 cpdef decode(bytes term):
   if term[:1] != ERL_MAGIC:
     raise ValueError("Invalid external term format version")
+  elif term[1:2] == ERL_COMPRESSED:
+    if len(term) < 16:
+      raise ValueError("Incomplete compressed packet")
+    body = term[6:]
+    length, = _int4_unpack(term[2:6])
+    if len(body) != length:
+      raise ValueError("Incomplete compressed packet: expected {0} bytes, but got only {1}".format(length, len(body)))
+    else:
+      body = decompress(term[6:])
+    return decode_term(body)[0]
   return decode_term(term[1:])[0]

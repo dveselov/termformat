@@ -128,3 +128,12 @@ class TermFormatDecoderTest(TestCase):
     with self.assertRaises(ValueError):
       result = termformat.decode(b"\x84")
       self.assertEqual(result, None)
+
+  def test_decode_compressed(self):
+    bytes = termformat.encode([[1, 2, 3]] * 10, 6)
+    self.assertEqual(termformat.decode(bytes), [[1, 2, 3]] * 10) 
+
+  def test_decode_incomplete_compressed(self):
+    bytes = termformat.encode([[1, 2, 3]] * 10, 6)
+    with self.assertRaises(ValueError):
+      self.assertEqual(termformat.decode(bytes[:-1]), [[1, 2, 3]] * 10) 

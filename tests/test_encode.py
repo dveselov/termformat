@@ -152,3 +152,7 @@ class TermFormatEncoderTest(TestCase):
   def test_encode_bytes(self):
     bytes = termformat.encode(b'foo')
     self.assertEqual(bytes, b'\x83m\x00\x00\x00\x03foo')
+
+  def test_encode_with_compression(self):
+    plain, compressed = termformat.encode([[1, 2, 3]] * 10), termformat.encode([[1, 2, 3]] * 10, 6)
+    self.assertTrue(len(plain) > len(compressed))
