@@ -164,7 +164,7 @@ def decode_term(term):
       return _char_unpack(body)[0], term[2:]
   elif term_type == ERL_INT:
     body = term[1:5]
-    if len(body) < 4:
+    if len(body) != 4:
       raise ValueError("Incomplete INT_EXT length: expected 4, got {0}".format(len(body)))
     else:
       return _signed_int4_unpack(body)[0], term[5:]
@@ -186,14 +186,14 @@ def decode_term(term):
     return n, tail[length:]
   elif term_type == ERL_FLOAT:
     body = term[1:32]
-    if len(body) < 31:
+    if len(body) != 31:
       raise ValueError("Incomplete FLOAT_EXT length: expected 31, got {0}".format(len(body)))
     else:
       body = body.split(b"\x00")[0]
       return float(body), term[32:]
   elif term_type == ERL_NEW_FLOAT:
     body = term[1:9]
-    if len(body) < 8:
+    if len(body) != 8:
       raise ValueError("Incomplete NEW_FLOAT_EXT length: expected 8, got {0}".format(len(body)))
     else:
       return _float_unpack(body)[0], term[9:]
