@@ -198,7 +198,11 @@ def decode_term(term):
     else:
       return _float_unpack(body)[0], term[9:]
   elif term_type == ERL_STRING:
-    length = _int2_unpack(term[1:3])[0]
+    length = term[1:3]
+    if len(length) != 2:
+      raise ValueError("Incomplete STRING_EXT length header")
+    else:
+      length, = _int2_unpack(length)
     body = term[3:length + 3]
     if length > 65535:
       raise ValueError("Invalid STRING_EXT length: {0}".format(length))
@@ -207,7 +211,11 @@ def decode_term(term):
     else:
       return body.decode(DEFAULT_ENCODING), term[length:]
   elif term_type == ERL_BINARY:
-    length = _int4_unpack(term[1:5])[0] + 5
+    length = term[1:5]
+    if len(length) != 4:
+      raise ValueError("Incomplete BINARY_EXT length header")
+    else:
+      length = _int4_unpack(length)[0] + 5
     body = term[5:length]
     if length > 4294967295:
       raise ValueError("Invalid BINARY_EXT length: {0}".format(length))
