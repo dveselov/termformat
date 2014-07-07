@@ -227,26 +227,28 @@ cdef inline object decode_term(bytes term):
     else:
       return body.decode(DEFAULT_ENCODING), term[length:]
   elif term_type == ERL_SMALL_TUPLE:
-    length, = _char_unpack(term[1:2])
-    if length > 255:
-      raise ValueError("Invalid SMALL_TUPLE_EXT length: {0}".format(length))
+    length = term[1:2]
+    if not length:
+      raise ValueError("Incomplete SMALL_TUPLE_EXT length header")
     else:
-      objects, tail = decode_iterable(length, term[2:])
-      return tuple(objects), tail
+      length, = _char_unpack(length)
+    objects, tail = decode_iterable(length, term[2:])
+    return tuple(objects), tail
   elif term_type == ERL_LARGE_TUPLE:
-    length, = _int4_unpack(term[1:5])
-    if length > 4294967295:
-      raise ValueError("Invalid LARGE_TUPLE_EXT length: {0}".format(length))
+    length = term[1:5]
+    if len(length) != 4:
+      raise ValueError("Incomplete LARGE_TUPLE_EXT length header")
     else:
-      objects, tail = decode_iterable(length, term[5:])
-      return tuple(objects), tail
+      length, = _int4_unpack(length)
+    objects, tail = decode_iterable(length, term[5:])
+    return tuple(objects), tail
   elif term_type == ERL_LIST:
-    length, = _int4_unpack(term[1:5])
-    if length > 4294967295:
-      raise ValueError("Invalid LIST_EXT length: {0}".format(length))
+    length = term[1:5]
+    if len(length) != 4:
+      raise ValueError("Incomplete ERL_LIST length header")
     else:
-      objects, tail = decode_iterable(length, term[5:])
-      return objects, tail
+      length, = _int4_unpack(length)
+    return decode_iterable(length, term[5:])
   elif term_type == ERL_ATOM:
     atom_length = _int2_unpack(term[1:3])[0] + 3
     atom_name = term[3:atom_length]
