@@ -4,7 +4,7 @@
 from struct import Struct
 from zlib import compress, decompress
 
-__version__ = "0.1.8"
+__version__ = "0.1.9"
 __is_cython__ = True
 
 try:
@@ -55,16 +55,16 @@ _signed_int4_unpack = _signed_int4.unpack
 _float_unpack = _float.unpack
 
 
-cpdef is_atom(str term):
+def is_atom(term):
   return term.startswith(":")
 
-cpdef str binary_to_atom(str term):
+def binary_to_atom(term):
   if not is_atom(term):
     return ":{0}".format(term)
   else:
     raise ValueError("Invalid value: {0}".format(term))
 
-cpdef str atom_to_binary(str term):
+def atom_to_binary(term):
   if is_atom(term):
     return term[1:]
   else:
