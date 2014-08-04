@@ -2,7 +2,7 @@
 from struct import Struct
 from zlib import compress, decompress
 
-__version__ = "0.1.8"
+__version__ = "0.1.9"
 __is_cython__ = False
 
 try:
