@@ -21,6 +21,11 @@ print termformat.decode(binary) # => 20
 print termformat.is_atom(":foo") # => True
 print termformat.atom_to_binary(":foo") # => "foo"
 print termformat.binary_to_atom("foo") # => ":foo"
+
+data = [0 for _ in range(1024)]
+compressed = termformat.encode(data, compressed=6)
+assert len(compressed) < len(termformat.encode(data))
+
 ```
 
 # Datatypes representation
