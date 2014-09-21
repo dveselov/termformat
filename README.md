@@ -7,9 +7,9 @@
 `termformat` supports both Python 2.7+ and 3.3+ versions including PyPy, and can be installed as any other module, e.g. with `pip`:
 
 ```bash
+$ apt-get install python-dev
 $ pip install termformat
 ```
-NB: On CPython you'll need to have `python-devel` package installed. If your platform have limited support of C extensions (e.g. PyPy), `termformat` will fallback to pure python version of itself. 
 
 # Usage
 
