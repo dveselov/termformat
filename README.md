@@ -4,7 +4,7 @@
 
 # Installation
 
-`termformat` supports both Python 2.7+ and 3.3+ versions including PyPy, and can be installed as any other module, e.g. with `pip`:
+`termformat` supports both Python 2.7+ and 3.3+ versions including PyPy.
 
 ```bash
 $ apt-get install python-dev
