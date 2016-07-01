@@ -1,4 +1,4 @@
-# termformat [![Build Status](https://travis-ci.org/tyrannosaurus/termformat.svg?branch=master)](https://travis-ci.org/tyrannosaurus/termformat)
+# termformat [![Build Status](https://travis-ci.org/dveselov/termformat.svg?branch=master)](https://travis-ci.org/dveselov/termformat)
 
 [Erlang External Term Format](http://erlang.org/doc/apps/erts/erl_ext_dist.html) (de)serialization module.
 
