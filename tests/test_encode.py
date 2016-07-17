@@ -78,7 +78,7 @@ class TermFormatEncoderTest(TestCase):
 
   def test_encode_small_tuple(self):
     bytes = termformat.encode((1, 2, 3))
-    self.assertEqual(bytes, b'\x83h\x03a\x01a\x02a\x03')
+    self.assertIn(bytes, [b'\x83h\x03a\x01a\x02a\x03', b'\x83h\x03a\x03a\x02a\x01'])
 
   def test_encode_large_tuple(self):
     bytes = termformat.encode((1, 2, 3) * 256)
